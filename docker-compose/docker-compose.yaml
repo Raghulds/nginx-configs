@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  ws3000:
+    build: ./wallet-3000
+    container_name: ws3000
+    expose:
+      - 3000
+    networks:
+      ws-net:
+
+  ws5000:
+    build: ./wallet-5000
+    container_name: ws5000
+    expose:
+      - 5000
+    networks:
+      ws-net:  
+
+  nginx:
+    build: ./nginx-routing  
+    container_name: nginx
+    ports:
+      - '8000:80' 
+    expose:
+      - 80
+      - 443 
+    depends_on:
+      - ws3000
+      - ws5000
+    networks:
+      ws-net:    
+
+networks:
+  ws-net:
+    driver: bridge
